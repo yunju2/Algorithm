@@ -21,10 +21,6 @@ public class Main {
             if (vowel == 3 || consonant == 3) {
                 return false;
             }
-
-            if (i > 0 && current == str.charAt(i - 1) && current != 'e' && current != 'o') {
-                return false;
-            }
         }
 
         return true;
