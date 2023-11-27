@@ -1,96 +1,57 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
- 
+
+
 public class Main {
-	static int num; // 스위치 개수
-	static int[] state; // 스위치 상태
-	static int student; // 학생 수
-	
-    public static void main(String[] args) throws IOException{
+
+    public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-  
-        // 스위치 개수 입력
-        num = Integer.parseInt(br.readLine());
-        
-        // 스위치 상태 입력
-        state = new int[num + 1];
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        for(int i = 1; i < state.length; i++) {
-        	state[i] = Integer.parseInt(st.nextToken());
+        int sw = Integer.parseInt(br.readLine());
+        boolean[] switchArray = new boolean[sw + 1];
+        String [] line = br.readLine().split(" ");
+
+        for(int i = 1; i <= sw; i ++) {
+            switchArray[i] = (line[i - 1].equals("1")) ? true : false;
         }
-        
-        // 학생수 입력
-        student = Integer.parseInt(br.readLine());
-        
-        // 학생 스위치 처리
-        for(int i = 0; i < student; i++) {
-        	st = new StringTokenizer(br.readLine());
-        	
-        	int gender = Integer.parseInt(st.nextToken());
-        	
-        	// 남자
-        	if(gender == 1) {
-        		man(Integer.parseInt(st.nextToken()));
-        	}
-        	// 여자
-        	else if(gender == 2) {
-        		women(Integer.parseInt(st.nextToken()));
-        	}
+
+        int studentNum = Integer.parseInt(br.readLine());
+
+        for(int j = 0; j<studentNum; j++) {
+            String [] input = br.readLine().split(" ");
+            int gender = Integer.parseInt(input[0]);
+            int num = Integer.parseInt(input[1]);
+
+            if(gender == 1) {
+                int count = num;
+                while(count <= sw) {
+                    switchArray[count] = !switchArray[count];
+                    count += num;
+                }
+
+            }else if (gender == 2) {
+                switchArray[num] = !switchArray[num];
+                for(int value = 1; num - value >= 1 && num + value <= sw; value++ ) {
+                    if(switchArray[num - value] != switchArray[num + value]) {
+                        break;
+                    } else {
+                        switchArray[num - value] = switchArray[num + value] = !switchArray[num - value];
+                    }
+                }
+
+            }
         }
-        
-        for(int i = 1; i < state.length; i++) {
-        	System.out.print(state[i] + " ");
-        	if(i % 20 == 0) {
-        		System.out.println();
-        	}
+
+
+        for(int output = 1; output <= sw; output++){
+            int answer = switchArray[output] ? 1 : 0;
+            System.out.print(answer + " ");
+            if(output % 20 == 0) {
+                System.out.println();
+            }
         }
-        br.close();
-    }
-    
-    public static void man(int x) {
-    	int cur = x;
-    	// 배수 번호 스위치 상태 반대로 변경
-    	while(cur < state.length) {
-    		if(state[cur] == 0) {
-    			state[cur] = 1;
-    		}
-    		else if(state[cur] == 1) {
-    			state[cur] = 0;
-    		}
-    		cur += x;
-    	}
-    }
-    
-    public static void women(int x) { 	
-    	// 현재 위치 스위치 상태 반대로 변경
-    	if(state[x] == 0) {
-			state[x] = 1;
-		}
-		else if(state[x] == 1) {
-			state[x] = 0;
-		}
-    	
-    	// 대칭 스위치 반대로 변경
-    	int count = 1;
-    	while((x - count) > 0 && (x + count) < state.length) {
-    		if(state[x + count] == state[x - count]) {
-    			
-    			if(state[x + count] == 0) {
-    				state[x + count] = 1;
-    				state[x - count] = 1;
-    			}
-    			else if(state[x + count] == 1) {
-    				state[x + count] = 0;
-    				state[x - count] = 0;
-    			}
-    			count++;
-    			
-    		}
-    		else {
-    			break;
-    		}
-    	}
+
+
     }
 }
